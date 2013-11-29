@@ -5,11 +5,27 @@ function assert(expected, value, msg) {
 	var v = JSON.stringify(value);
 	if (e != v) {
 		console.log("Assertion failed",msg||"","\nvalue:    ",v,"\nexpected: ",e);
+		process.exit();
 	} else {
 		console.log("Ok",msg||"")
 	}
 }
 var utils = new cypher.CypherUtils();
+
+assert({nodes:[{_id: 0, _labels:[], name:"Pet\"er"}],links:[]},
+	   utils.parseCreate("create (a {name:'Pet\"er'})"),"node with single string property with inner double quote")
+
+assert({nodes:[{_id: 0, _labels:[], kids:["Oskar","Kalle","Neo"]}],links:[]},
+		   utils.parseCreate("create (a {kids:[\"Oskar\",\"Kalle\",\"Neo\"]})"),"node string array property")
+
+assert({nodes:[{_id: 0, _labels:[], kids:["Oskar","Kalle","Neo"]}],links:[]},
+		   utils.parseCreate("create (a {kids:['Oskar','Kalle','Neo']})"),"node single quoted string array property")
+
+assert({nodes:[{_id: 0, _labels:[], kids:["Oskar","Kalle","Neo \"The Matrix\" 4j"]}],links:[]},
+	   utils.parseCreate("create (a {kids:['Oskar','Kalle','Neo \"The Matrix\" 4j']})"),"node single quoted string array property")
+
+assert({nodes:[{_id: 0, _labels:[], name:"P'et'er"}],links:[]},
+	   utils.parseCreate("create (a {name:\"P'et'er\"})"),"node with single string property with inner single quote")
 
 assert({nodes:[{_id: 0, _labels:[]}],links:[]},
        utils.parseCreate("create (a)"),"simple node")
@@ -29,6 +45,9 @@ assert({nodes:[{_id: 0, _labels:["Person","Father"]}],links:[]},
 assert({nodes:[{_id: 0, _labels:["Person"], name:"Peter"}],links:[]},
        utils.parseCreate("create (a:Person {name:'Peter'})"),"node with single string property ")
 
+assert({nodes:[{_id: 0, _labels:[], name:"Pet'er"}],links:[]},
+       utils.parseCreate("create (a {name:\"Pet'er\"})"),"node with single string property with single quote") 
+	
 assert({nodes:[{_id: 0, _labels:["Person"], name:"Peter"}],links:[]},
        utils.parseCreate("create (a:Person {name:\"Peter\"})"),"node with single double quoted string property ")
 
@@ -90,3 +109,8 @@ assert({nodes:[{_id: 0, _labels:[]},
                {_id: 1, _labels:[]}],
 		links:[{_type:"KNOWS",source:0,target:1}]},
        utils.parseCreate("create (a)\n create (b) \ncreate (a)-[:KNOWS]->(b)"),"separate node create (a) create (b) create rel")
+
+assert({nodes:[{_id: 0, _name: "a", _labels:[]},
+               {_id: 1, _name: "b", _labels:[]}],
+		links:[{_name:"rel", _type:"KNOWS",source:0,target:1}]},
+       utils.parseCreate("create (a)\n create (b) \ncreate (a)-[rel:KNOWS]->(b)",{keep_names:true}),"keep names of nodes and rels")
