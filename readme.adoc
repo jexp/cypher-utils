@@ -29,7 +29,7 @@ Usage:
 function render() {
 	var utils = new CypherUtils();
 	var elements = document.getElementsByTagName("pre");
-	for (var i=0;i<elements.length;i++) {
+	for (var i=0;i&lt;elements.length;i++) {
 		var cypher=elements[i].innerText;
 		var graph=utils.parseCreate(cypher);
 		forceLayout(graph);
