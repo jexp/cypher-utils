@@ -1,0 +1,38 @@
+= Cypher-Utils =
+
+== Cypher Create Parser ==
+
+Simple Cypher create statement parser, generates d3 json.
+
+Supports:
+
+* nodes with (multiple) labels
+* nodes with properties: strings, numbers, boolean, arrays
+* incoming, outgoing relationships
+* separate declaration of nodes and rels
+
+
+Usage:
+
+++++
+<pre>
+	create (me:Person {name:"Michael"})
+	create (peter:Person {name:"Peter"})
+	create (graphgist:Project {name:"GraphGist"})
+	create (me)-[:KNOWS {since:2006}]->(peter), 
+	       (me)-[:WORKS_ON]->(graphgist)
+	CREATE (graphgist)<-[:WORKS_ON]-(peter)
+</pre>
+
+function render() {
+	var utils = new CypherUtils();
+	var elements = document.getElementsByTagName("pre");
+	for (var i=0;i<elements.length;i++) {
+		var cypher=elements[i].innerText;
+		var graph=utils.parseCreate(cypher);
+		forceLayout(graph);
+	}
+}
+++++
+
+Run tests: ./test.sh
