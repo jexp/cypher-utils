@@ -16,16 +16,19 @@ Supports:
 
 Usage:
 
-++++
-<pre>
-	create (me:Person {name:"Michael"})
+[source,cypher]
+----
+create (me:Person {name:"Michael"})
 	create (peter:Person {name:"Peter"})
 	create (graphgist:Project {name:"GraphGist"})
 	create (me)-[:KNOWS {since:2006}]->(peter), 
 	       (me)-[:WORKS_ON]->(graphgist)
 	CREATE (graphgist)<-[:WORKS_ON]-(peter)
-</pre>
+----
 
+
+[source,javascript]
+----
 function render() {
 	var utils = new CypherUtils();
 	var elements = document.getElementsByTagName("pre");
@@ -35,6 +38,6 @@ function render() {
 		forceLayout(graph);
 	}
 }
-++++
+----
 
 Run tests: ./test.sh
