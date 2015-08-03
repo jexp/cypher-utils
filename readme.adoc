@@ -41,3 +41,5 @@ function render() {
 ----
 
 Run tests: ./test.sh
+
+License: MIT
